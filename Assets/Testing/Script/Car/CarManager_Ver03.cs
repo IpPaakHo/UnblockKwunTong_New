@@ -11,7 +11,7 @@ public class CarManager_Ver03 : MonoBehaviour
     Path pathManager;
     PathController_Ver01 pathController;
     CarMovementController_Ver02 moveController;
-    //SpawnCarController_Ver01 spawnController;
+    SpawnCarController_Ver01 spawnController;
 
     void Start()
     {
@@ -22,13 +22,13 @@ public class CarManager_Ver03 : MonoBehaviour
         pathManager = transform.parent.parent.gameObject.GetComponent<Path>();
         pathController = GetComponent<PathController_Ver01>();
         moveController = GetComponent<CarMovementController_Ver02>();
-        //spawnController = GetComponentInParent<SpawnCarController_Ver01>();
+        spawnController = GetComponentInParent<SpawnCarController_Ver01>();
 
         //Set current path
-        //pathController.mainPathIndex = spawnController.mainPathIndex;
-        //pathController.currentPathIndex = spawnController.pathIndex;
-        pathController.mainPathIndex = 1;
-        pathController.currentPathIndex = 11;
+        pathController.mainPathIndex = spawnController.mainPathIndex;
+        pathController.currentPathIndex = spawnController.pathIndex;
+        //pathController.mainPathIndex = 1;
+        //pathController.currentPathIndex = 11;
         //transform.LookAt(currentPath[wayPointIndex].transform.position);
 
         SetPath();
@@ -55,15 +55,6 @@ public class CarManager_Ver03 : MonoBehaviour
         pathController.waypointIndex++;
         if (pathController.waypointIndex >= pathController.currentPath.Length)
         {
-            /*pathController.waypointIndex = 0;
-            pathController.mainPathIndex = pathManager.GetNextMainPathIndex(pathController.mainPathIndex, pathController.currentPathIndex);
-            pathController.mainPathIndex = pathController.MainIndexController(pathController.mainPathIndex);
-            pathController.currentPathIndex = pathController.nextPathIndex;
-
-            pathController.currentPath = pathManager.GetPath(pathController.mainPathIndex, pathController.currentPathIndex);
-            pathController.nextPathIndex = pathManager.GetNextPathID(pathController.mainPathIndex, pathController.currentPathIndex, pathController.secondPathIndex);
-            pathController.secondPathIndex = pathManager.GetSecondPathIndex(pathController.mainPathIndex, pathController.currentPathIndex);
-            */
             pathController.SetNextPath();
         }
 
@@ -75,7 +66,7 @@ public class CarManager_Ver03 : MonoBehaviour
         if (pathController.currentPathIndex == 9 || transform.position.y >= 1 || transform.position.y < 0)
         {
             pathController.nextPathIndex = 0;
-            //spawnController.count--;
+            spawnController.count--;
             Destroy(gameObject);
         }
 

@@ -7,6 +7,7 @@ public class FrontSensor : MonoBehaviour
     [SerializeField] private float rayDistance;
     public bool isHit;
     public Transform hitCar;
+    private float timer;
 
     CarMovementController_Ver02 moveController;
 
@@ -29,20 +30,23 @@ public class FrontSensor : MonoBehaviour
             //Debug.DrawLine(ray.origin, ray.origin + ray.direction * rayDistance, Color.red);
             isHit = true;
             hitCar = hitTarget.transform;
-            //hitCar.GetComponent<CarMovementController_Ver02>().normalMode = false;
-            //hitCar.GetComponent<CarMovementController_Ver02>().stopMode = true;
             if(hitCar.GetComponent<CarMovementController_Ver02>().parkingMode == true)
             {
                 moveController.turningMode = true;
                 moveController.normalMode = false;
                 moveController.stopMode = false;
             }
-            if (hitTarget.collider.CompareTag("parkingCar"))
+            if (hitCar.GetComponent<CarMovementController_Ver02>().normalMode == true)
             {
-                moveController.turningMode = true;
-                moveController.normalMode = false;
-                moveController.stopMode = false;
+                timer = Time.time;
+                if(Time.time >= timer)
+                {
+                    moveController.currentSpeed /= 2;
+                    timer = Time.time + 1f;
+                }
+                
             }
+
         }
         else
         {

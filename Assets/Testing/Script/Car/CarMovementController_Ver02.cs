@@ -73,18 +73,6 @@ public class CarMovementController_Ver02 : MonoBehaviour
         {
             //normalModeController();
         }
-
-        if (frontSensor.isHit)
-        {
-            //stopMode = true;
-            //normalMode = false;
-            turningMode = true;
-        }
-        /*else if (!frontSensor.isHit)
-        {
-            normalMode = true;
-            stopMode = false;
-        }*/
     }
 
     public void normalModeController()
@@ -105,13 +93,20 @@ public class CarMovementController_Ver02 : MonoBehaviour
 
     public void TurningModeConreoller()
     {
-        Debug.Log("Turning01");
-        
+        Debug.Log("Turning01"); 
         currentSpeed = 5;
         accSpeed = 0.2f;
-        if(setTurningPoint == false)
+        if (setTurningPoint == false)
         {
-            turningPoint = new Vector3(transform.position.x + 7, 0, transform.position.z+5);
+            //turningPoint = new Vector3(transform.position.x + 10, 0, transform.position.z+2);
+            pathController.mainPathIndex++;
+            pathController.waypointIndex++;
+            pathController.currentPath = pathManager.GetPath(pathController.mainPathIndex, pathController.currentPathIndex);
+            turningPoint = new Vector3(
+                (pathController.currentPath[pathController.waypointIndex].transform.position.x + pathController.currentPath[pathController.waypointIndex-1].transform.position.x) / 2,
+                pathController.currentPath[pathController.waypointIndex].transform.position.y,
+                (pathController.currentPath[pathController.waypointIndex].transform.position.z + pathController.currentPath[pathController.waypointIndex-1].transform.position.z) / 2 
+            );
             setTurningPoint = true;
         }
         Debug.Log("Turning02");
@@ -122,19 +117,10 @@ public class CarMovementController_Ver02 : MonoBehaviour
         if (distanceBetweenTwoPoint < 2f)
         {
             Debug.Log("Turning04");
-            //Debug.Log("success!");
             turningMode = false;
             normalMode = true;
-            //transform.LookAt()
-            //transform.LookAt(pathController.currentPath[pathController.waypointIndex].transform.position);
-            //pathController.SetPath(pathController.mainPathIndex + 1, pathController.currentPathIndex, pathController.secondPathIndex);
-            pathController.mainPathIndex++;
-            pathController.waypointIndex++;
-            //pathController.currentPathIndex = 11;
-            Debug.Log("pathController.mainPathIndex=" + pathController.mainPathIndex);
-            pathController.currentPath = pathManager.GetPath(pathController.mainPathIndex, pathController.currentPathIndex);
-
-            transform.LookAt(pathController.currentPath[pathController.waypointIndex].transform.position);
+            setTurningPoint = false;
+            Debug.Log("Turning05");
         }
     }
 
