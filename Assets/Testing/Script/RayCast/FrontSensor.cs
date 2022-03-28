@@ -10,7 +10,6 @@ public class FrontSensor : MonoBehaviour
 
     CarMovementController_Ver02 moveController;
 
-    // Start is called before the first frame update
     void Start()
     {
         moveController = transform.parent.parent.gameObject.GetComponent<CarMovementController_Ver02>();
@@ -33,6 +32,12 @@ public class FrontSensor : MonoBehaviour
             //hitCar.GetComponent<CarMovementController_Ver02>().normalMode = false;
             //hitCar.GetComponent<CarMovementController_Ver02>().stopMode = true;
             if(hitCar.GetComponent<CarMovementController_Ver02>().parkingMode == true)
+            {
+                moveController.turningMode = true;
+                moveController.normalMode = false;
+                moveController.stopMode = false;
+            }
+            if (hitTarget.collider.CompareTag("parkingCar"))
             {
                 moveController.turningMode = true;
                 moveController.normalMode = false;

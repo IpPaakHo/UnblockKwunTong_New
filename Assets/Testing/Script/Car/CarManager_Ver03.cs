@@ -30,23 +30,23 @@ public class CarManager_Ver03 : MonoBehaviour
         pathController.mainPathIndex = 1;
         pathController.currentPathIndex = 11;
         //transform.LookAt(currentPath[wayPointIndex].transform.position);
+
+        SetPath();
+        //pathController.GetPath();
     }
 
     // Update is called once per frame
     void Update()
     {
         //DestroyController();
-        pathController.currentPath = pathManager.GetPath(pathController.mainPathIndex, pathController.currentPathIndex);
-        pathController.nextPathIndex = pathManager.GetNextPathID(pathController.mainPathIndex, pathController.currentPathIndex, pathController.secondPathIndex);
-        pathController.secondPathIndex = pathManager.GetSecondPathIndex(pathController.mainPathIndex, pathController.currentPathIndex);
-
-        //speedController.SpeedControl(!sensor.isHit);
-        //speedController.Movement();
+        moveController.SpeedLimitedController();
+        moveController.ModeController();
         nextWaypointDistance = Vector3.Distance(transform.position, pathController.currentPath[pathController.waypointIndex].transform.position);
         if (nextWaypointDistance < 2f)
         {
             IncreaseIndex();
         }
+        
         //speedController.RandomStopEvent(pathController.mainPathIndex, pathController.currentPathIndex, pathController.waypointIndex);
     }
 
@@ -55,7 +55,7 @@ public class CarManager_Ver03 : MonoBehaviour
         pathController.waypointIndex++;
         if (pathController.waypointIndex >= pathController.currentPath.Length)
         {
-            pathController.waypointIndex = 0;
+            /*pathController.waypointIndex = 0;
             pathController.mainPathIndex = pathManager.GetNextMainPathIndex(pathController.mainPathIndex, pathController.currentPathIndex);
             pathController.mainPathIndex = pathController.MainIndexController(pathController.mainPathIndex);
             pathController.currentPathIndex = pathController.nextPathIndex;
@@ -63,6 +63,8 @@ public class CarManager_Ver03 : MonoBehaviour
             pathController.currentPath = pathManager.GetPath(pathController.mainPathIndex, pathController.currentPathIndex);
             pathController.nextPathIndex = pathManager.GetNextPathID(pathController.mainPathIndex, pathController.currentPathIndex, pathController.secondPathIndex);
             pathController.secondPathIndex = pathManager.GetSecondPathIndex(pathController.mainPathIndex, pathController.currentPathIndex);
+            */
+            pathController.SetNextPath();
         }
 
         transform.LookAt(pathController.currentPath[pathController.waypointIndex].transform.position);
@@ -78,6 +80,13 @@ public class CarManager_Ver03 : MonoBehaviour
         }
 
 
+    }
+
+    private void SetPath()
+    {
+        pathController.currentPath = pathManager.GetPath(pathController.mainPathIndex, pathController.currentPathIndex);
+        pathController.nextPathIndex = pathManager.GetNextPathID(pathController.mainPathIndex, pathController.currentPathIndex, pathController.secondPathIndex);
+        pathController.secondPathIndex = pathManager.GetSecondPathIndex(pathController.mainPathIndex, pathController.currentPathIndex);
     }
 
 }
