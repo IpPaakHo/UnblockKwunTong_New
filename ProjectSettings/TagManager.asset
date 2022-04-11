@@ -6,45 +6,8 @@ TagManager:
   tags:
   - Vechicles
   - Car
-  - HYRFourthSl
-  - HYRFourthMd
-  - HYRFourthFt
-  - HYRFirstMd
-  - HYRFirstFt
-  - HYRSecSl
-  - HYRSecMd
-  - HYRSecFt
-  - HYRThirdSl
-  - HYRThirdMd
-  - HYRThirdFt
-  - HYRFirstSl
-  - SYSSecSl
-  - SYSSecMd
-  - SYSSecFt
-  - SYSThirdSl
-  - SYSThirdMd
-  - SYSThirdFt
-  - SYSFourthSl
-  - SYSFourthMd
-  - SYSFourthFt
-  - HMSFirstEn
-  - HMSFirstSl
-  - HMSFirstMd
-  - HMSFirstFt
-  - HYSSecSl
-  - HYSSecMd
-  - HYSSecEx
-  - KYSThirdSl
-  - KYSThirdFt
-  - KYSFourthSl
-  - KYSFourthMS
-  - KYSFourthMF
-  - KYSFourthFt
-  - HYSFirstEn
-  - HYSFirstSl
-  - HYSFirstMd
-  - HYSFirstFt
-  - HYSSecFt
+  - parkingCar
+  - TrafficLightBarrier
   layers:
   - Default
   - TransparentFX

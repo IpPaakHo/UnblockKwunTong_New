@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PathController_Ver01 : MonoBehaviour
 {
-    //Path manager;
+    Path pathManager;
 
     public GameObject[] currentPath = null;
     public int currentPathIndex = 0;
@@ -17,13 +17,7 @@ public class PathController_Ver01 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //manager = transform.parent.parent.gameObject.GetComponent<Path>();
-        /*currentPath = null;
-        currentPathIndex = 61;
-        nextPathIndex = 0;
-        waypointIndex = 0;
-        mainPathIndex = 2;
-        nextMainPathIndex = 0;*/
+        pathManager = transform.parent.parent.gameObject.GetComponent<Path>();
     }
 
     private void Update()
@@ -57,5 +51,25 @@ public class PathController_Ver01 : MonoBehaviour
         {
             return mainIndex;
         }
+
+        
+    }
+    public void GetPath(int mainPathIndex, int currentPathIndex, int secondPathIndex)
+    {
+        this.currentPath = pathManager.GetPath(mainPathIndex, currentPathIndex);
+        this.nextPathIndex = pathManager.GetNextPathID(mainPathIndex, currentPathIndex, secondPathIndex);
+        this.secondPathIndex = pathManager.GetSecondPathIndex(mainPathIndex, currentPathIndex);
+    }
+
+    public void SetNextPath()
+    {
+        waypointIndex = 0;
+        mainPathIndex = pathManager.GetNextMainPathIndex(mainPathIndex, currentPathIndex);
+        mainPathIndex = MainIndexController(mainPathIndex);
+        currentPathIndex = nextPathIndex;
+
+        currentPath = pathManager.GetPath(mainPathIndex, currentPathIndex);
+        nextPathIndex = pathManager.GetNextPathID(mainPathIndex, currentPathIndex, secondPathIndex);
+        secondPathIndex = pathManager.GetSecondPathIndex(mainPathIndex, currentPathIndex);
     }
 }

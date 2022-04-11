@@ -45,7 +45,6 @@ public class CarManager_Ver02 : MonoBehaviour
     void Update()
     {
         DestroyController();
-        
 
         pathController.currentPath = pathManager.GetPath(pathController.mainPathIndex, pathController.currentPathIndex);
         pathController.nextPathIndex = pathManager.GetNextPathID(pathController.mainPathIndex, pathController.currentPathIndex, pathController.secondPathIndex);
