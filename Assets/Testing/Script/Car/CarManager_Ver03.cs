@@ -5,9 +5,6 @@ using UnityEngine;
 public class CarManager_Ver03 : MonoBehaviour
 {
     private float nextWaypointDistance;
-    private float currentWaypointDis;
-
-    //FrontSensor frontSensor;
     Path pathManager;
     PathController_Ver01 pathController;
     CarMovementController_Ver02 moveController;

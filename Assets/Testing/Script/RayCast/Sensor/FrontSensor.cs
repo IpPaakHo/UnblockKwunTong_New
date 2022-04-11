@@ -6,8 +6,10 @@ public class FrontSensor : MonoBehaviour
 {
     [SerializeField] private float rayDistance;
     public bool isHit;
+
+    public bool isFrontCarParking;
+    public bool isTrafficLight;
     public Transform hitCar;
-    private float timer;
 
     CarMovementController_Ver02 moveController;
 
@@ -20,21 +22,22 @@ public class FrontSensor : MonoBehaviour
     void Update()
     {
         Ray ray = new Ray(transform.position, transform.forward);
-        //Ray ray = new Ray(new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.forward);
         RaycastHit hitTarget;
 
         if (Physics.Raycast(ray, out hitTarget, rayDistance))
-        //if (Physics.Raycast(ray, rayDistance))
         {
             Debug.DrawLine(ray.origin, hitTarget.point, Color.red);
             //Debug.DrawLine(ray.origin, ray.origin + ray.direction * rayDistance, Color.red);
             isHit = true;
             hitCar = hitTarget.transform;
-            if(hitCar.GetComponent<CarMovementController_Ver02>().parkingMode == true)
+            isFrontCarParking = hitCar.GetComponent<CarMovementController_Ver02>().parkingMode;
+            if(hitCar.tag == "TrafficLightBarrier")
             {
-                moveController.turningMode = true;
-                moveController.normalMode = false;
-                moveController.stopMode = false;
+                isTrafficLight = true;
+            }
+            /*if (hitCar.GetComponent<CarMovementController_Ver02>().parkingMode == true)
+            {
+                isFrontCarParking = true;
             }
             if (hitCar.GetComponent<CarMovementController_Ver02>().normalMode == true)
             {
@@ -44,13 +47,13 @@ public class FrontSensor : MonoBehaviour
                     moveController.currentSpeed /= 2;
                     timer = Time.time + 1f;
                 }
-                
-            }
-
+            }*/
         }
         else
         {
             isHit = false;
+            isFrontCarParking = false;
+            isTrafficLight = false;
             Debug.DrawLine(ray.origin, ray.origin + ray.direction * rayDistance, Color.green);
         }
     }

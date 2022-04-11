@@ -11,7 +11,6 @@ public class CarMovementController_Ver02 : MonoBehaviour
     public bool stopMode;
     public bool normalMode;
     public bool turningMode;
-    public bool slowdownMode;
     public bool parkingMode;
 
     [SerializeField] private Vector3 turningPoint;
@@ -19,9 +18,7 @@ public class CarMovementController_Ver02 : MonoBehaviour
 
     [SerializeField] private float timer;
 
-    FrontSensor frontSensor;
-    RightSensor rightSensor;
-    BackSensor backSensor;
+    SensorController frontSensor;
     PathController_Ver01 pathController;
     Path pathManager;
 
@@ -36,9 +33,8 @@ public class CarMovementController_Ver02 : MonoBehaviour
         timer = 0f;
         //frontSensor = GetComponentInChildren<Raycast_Ver2>();
         //frontSensor = GetComponentInChildren<FrontSensor>();
-        frontSensor = transform.GetChild(0).GetChild(0).GetComponent<FrontSensor>();
-        rightSensor = transform.GetChild(0).GetChild(1).GetComponent<RightSensor>();
-        backSensor = transform.GetChild(0).GetChild(2).GetComponent<BackSensor>();
+        //frontSensor = transform.GetChild(0).GetChild(0).GetComponent<FrontSensor>();
+        frontSensor = GetComponentInChildren<SensorController>();
         pathController = transform.GetComponent<PathController_Ver01>();
         pathManager = transform.parent.parent.gameObject.GetComponent<Path>();
         //Debug.Log("Start Finish");
@@ -79,12 +75,37 @@ public class CarMovementController_Ver02 : MonoBehaviour
         {
             //normalModeController();
         }
+
+        if (!frontSensor.isFrontSensorHit)
+        {
+            normalMode = true;
+            stopMode = false;
+            turningMode = false;
+        }
+        else if (frontSensor.isFrontSensorHit && !frontSensor.needTurning)
+        {
+            stopMode = true;
+            normalMode = false;
+            turningMode = false;
+        }
+        else if(frontSensor.isFrontSensorHit && frontSensor.needTurning)
+        {
+            stopMode = false;
+            normalMode = false;
+            turningMode = true;
+        }
+        else if(frontSensor.isFrontSensorHit && frontSensor.isTrafficLight)
+        {
+            stopMode = true;
+            normalMode = false;
+            turningMode = false;
+        }
+        
     }
 
     public void normalModeController()
     {
         accSpeed = 0.4f;
-        rightSensor.active = false;
         if (Time.time >= timer && currentSpeed >= 0 && currentSpeed < MAXSPEED) {
             //accSpeed = 0.4f;
             currentSpeed += accSpeed;
@@ -102,10 +123,8 @@ public class CarMovementController_Ver02 : MonoBehaviour
     public void TurningModeConreoller()
     {
         //Debug.Log("Turning01"); 
-        currentSpeed = 5;
-        accSpeed = 0.2f;
-        rightSensor.active = true;
-        backSensor.active = true;
+        //currentSpeed = 5;
+        //accSpeed = 0.2f;
         if (setTurningPoint == false)
         {
             //turningPoint = new Vector3(transform.position.x + 10, 0, transform.position.z+2);
@@ -119,20 +138,14 @@ public class CarMovementController_Ver02 : MonoBehaviour
             );
             setTurningPoint = true;
         }
-        //Debug.Log("Turning02");
         transform.LookAt(turningPoint);
         transform.Translate(Vector3.forward * currentSpeed * Time.deltaTime);
         distanceBetweenTwoPoint = Vector3.Distance(transform.position, turningPoint);
-        //Debug.Log("Turning03");
         if (distanceBetweenTwoPoint < 3f)
         {
-            //Debug.Log("Turning04");
             turningMode = false;
             normalMode = true;
             setTurningPoint = false;
-            rightSensor.active = false;
-            backSensor.active = false;
-            //Debug.Log("Turning05");
         }
     }
 
@@ -140,17 +153,6 @@ public class CarMovementController_Ver02 : MonoBehaviour
     {
         currentSpeed = 0;
         accSpeed = 0;
-    }
-
-    public void SlowdownModeController()
-    {
-        if (Time.time >= timer && currentSpeed < MAXSPEED)
-        {
-            currentSpeed -= accSpeed;
-            timer = Time.time + 0.1f;
-            //Debug.Log("Timer updated");
-        }
-        transform.Translate(Vector3.forward * currentSpeed * Time.deltaTime);
     }
 
     public void SpeedLimitedController()
@@ -165,12 +167,6 @@ public class CarMovementController_Ver02 : MonoBehaviour
         }
     }
 
-    public void HitByOther()
-    {
-        Debug.Log("Raycast Success!!");
-        normalMode = false;
-        stopMode = true;
-    }
 
     
 }
