@@ -19,12 +19,14 @@ public class CarMovementController_Ver02 : MonoBehaviour
     [SerializeField] private float timer;
 
     SensorController frontSensor;
+    RightSensorController rightSensor;
     PathController_Ver01 pathController;
     Path pathManager;
 
     //public GameObject rightSensor;
 
     private bool setTurningPoint = false;
+    private bool lookAtturningPoint = false;
 
     private void Start()
     {
@@ -35,6 +37,7 @@ public class CarMovementController_Ver02 : MonoBehaviour
         //frontSensor = GetComponentInChildren<FrontSensor>();
         //frontSensor = transform.GetChild(0).GetChild(0).GetComponent<FrontSensor>();
         frontSensor = GetComponentInChildren<SensorController>();
+        rightSensor = GetComponentInChildren<RightSensorController>();
         pathController = transform.GetComponent<PathController_Ver01>();
         pathManager = transform.parent.parent.gameObject.GetComponent<Path>();
         //Debug.Log("Start Finish");
@@ -122,23 +125,28 @@ public class CarMovementController_Ver02 : MonoBehaviour
 
     public void TurningModeConreoller()
     {
-        //Debug.Log("Turning01"); 
+        Debug.Log("Start Turning Mode");
+        rightSensor.isActive = true;
         //currentSpeed = 5;
-        //accSpeed = 0.2f;
         if (setTurningPoint == false)
         {
-            //turningPoint = new Vector3(transform.position.x + 10, 0, transform.position.z+2);
             pathController.mainPathIndex++;
-            pathController.waypointIndex++;
             pathController.currentPath = pathManager.GetPath(pathController.mainPathIndex, pathController.currentPathIndex);
-            turningPoint = new Vector3(
-                (pathController.currentPath[pathController.waypointIndex].transform.position.x + pathController.currentPath[pathController.waypointIndex-1].transform.position.x) / 2,
-                pathController.currentPath[pathController.waypointIndex].transform.position.y,
-                (pathController.currentPath[pathController.waypointIndex].transform.position.z + pathController.currentPath[pathController.waypointIndex-1].transform.position.z) / 2 
-            );
+            turningPoint = pathController.currentPath[pathController.waypointIndex].transform.position;
             setTurningPoint = true;
         }
-        transform.LookAt(turningPoint);
+
+        if (rightSensor.isRightSensorHit)
+        {
+            currentSpeed = 0;
+        }else
+        {
+            Debug.Log("LookAt() Success");
+            transform.LookAt(turningPoint);
+            currentSpeed = 5f;
+        }
+
+        //transform.LookAt(turningPoint);
         transform.Translate(Vector3.forward * currentSpeed * Time.deltaTime);
         distanceBetweenTwoPoint = Vector3.Distance(transform.position, turningPoint);
         if (distanceBetweenTwoPoint < 3f)
@@ -146,6 +154,7 @@ public class CarMovementController_Ver02 : MonoBehaviour
             turningMode = false;
             normalMode = true;
             setTurningPoint = false;
+            rightSensor.isActive = false;
         }
     }
 
